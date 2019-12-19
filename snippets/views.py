@@ -19,12 +19,34 @@ def snippet_list(request, format=None):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        print('POST - input: %s'.format(request.data))
+        # print('POST - input: {:s}'.format(request.data))
+        print(request.data) # {'code': 'print(456)', 'language': 'java'}
+        print(request.data["code"])
+        print(request.data["language"])
         serializer = SnippetSerializer(data=request.data)
+
         if serializer.is_valid():
+            print(type(serializer.validated_data))
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED) # serializer.data is an OrderedDict object
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','POST'])
+def profile_list(request, format=None):
+
+    if request.method == 'GET':
+        x = '{ "name":"John", "age":30, "city":"New York"}'
+        return Response(x)
+
+    elif request.method == 'POST':
+        # print('POST - input: {:s}'.format(request.data))
+        print(request.data) # {'code': 'print(456)', 'language': 'java'}
+        x = '{ "hobby":"tennis"}'
+        x = {} # dictionary
+        x['a'] = 'A'
+        x['b'] = 'B'
+        return Response(x)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def snippet_detail(request, pk, format=None):
